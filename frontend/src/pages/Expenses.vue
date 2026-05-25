@@ -2,31 +2,43 @@
   <div>
     <h1>Despesas</h1>
 
-    <form @submit.prevent="createExpense" style="margin-bottom:12px">
-      <div><input v-model="description" placeholder="Descrição" required /></div>
-      <div><input v-model.number="amount" type="number" step="0.01" placeholder="Valor" required /></div>
-      <div><input v-model="date" type="date" required /></div>
-      <div>
-        <select v-model.number="category_id" required>
-          <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.name }}</option>
-        </select>
-      </div>
-      <div style="margin-top:8px">
-        <button type="submit">{{ editId ? 'Salvar' : 'Criar despesa' }}</button>
-        <button type="button" v-if="editId" @click="() => { editId = null; description=''; amount=null }">Cancelar</button>
-      </div>
-      <div v-if="errors && Object.keys(errors).length" style="color:red;margin-top:6px">
-        <div v-for="(msgs, key) in errors" :key="key">{{ key }}: {{ Array.isArray(msgs) ? msgs.join(', ') : msgs }}</div>
-      </div>
-    </form>
+    <div class="card" style="max-width:720px;margin-bottom:12px">
+      <form @submit.prevent="createExpense">
+        <input v-model="description" placeholder="Descrição" required />
+        <div class="form-row">
+          <input v-model.number="amount" type="number" step="0.01" placeholder="Valor" required />
+          <input v-model="date" type="date" required />
+          <select v-model.number="category_id" required>
+            <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.name }}</option>
+          </select>
+        </div>
+        <div style="margin-top:8px">
+          <button type="submit">{{ editId ? 'Salvar' : 'Criar despesa' }}</button>
+          <button type="button" v-if="editId" @click="() => { editId = null; description=''; amount=null }" class="secondary">Cancelar</button>
+        </div>
+        <div v-if="errors && Object.keys(errors).length" style="color:red;margin-top:6px">
+          <div v-for="(msgs, key) in errors" :key="key">{{ key }}: {{ Array.isArray(msgs) ? msgs.join(', ') : msgs }}</div>
+        </div>
+      </form>
+    </div>
 
-    <ul>
-      <li v-for="exp in expenses" :key="exp.id" style="margin-bottom:8px">
-        {{ exp.date }} — {{ exp.description }} — {{ exp.amount }} ({{ exp.category?.name }})
-        <button @click="startEdit(exp)" style="margin-left:8px">Editar</button>
-        <button @click="deleteExpense(exp.id)" style="margin-left:8px">Excluir</button>
-      </li>
-    </ul>
+    <div class="card" style="max-width:720px">
+      <ul>
+        <li v-for="exp in expenses" :key="exp.id" style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div>{{ formatDate(exp.date) }} <span class="muted small">— {{ exp.category?.name }}</span></div>
+            <div class="muted small">{{ exp.description }}</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <div>R$ {{ Number(exp.amount).toFixed(2) }}</div>
+            <div>
+              <button @click="startEdit(exp)" class="secondary">Editar</button>
+              <button @click="deleteExpense(exp.id)" class="secondary">Excluir</button>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -51,6 +63,13 @@ export default {
     this.loadExpenses()
   },
   methods: {
+    formatDate(value) {
+      if (!value) return ''
+      const datePart = String(value).slice(0, 10)
+      const [year, month, day] = datePart.split('-')
+      if (!year || !month || !day) return String(value)
+      return `${day}/${month}/${year}`
+    },
     async loadCategories() {
       try {
         const res = await api.get('/categories')

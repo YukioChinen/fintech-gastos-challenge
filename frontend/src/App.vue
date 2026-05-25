@@ -1,13 +1,17 @@
 <template>
   <div>
-    <nav style="padding:10px;background:#f5f5f5">
-      <a href="/">Dashboard</a> |
-      <router-link to="/categories">Categorias</router-link> |
-      <router-link to="/expenses">Despesas</router-link> |
-      <router-link to="/change-password">Trocar senha</router-link> |
-      <a href="#" @click.prevent="logout">Sair</a>
-    </nav>
-    <main style="padding:16px">
+    <header class="app-nav">
+      <div class="links">
+        <router-link to="/">Dashboard</router-link>
+        <router-link to="/categories">Categorias</router-link>
+        <router-link to="/expenses">Despesas</router-link>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="muted small">Olá, {{ user?.name }}</span>
+        <a href="#" class="btn" @click.prevent="logout">Sair</a>
+      </div>
+    </header>
+    <main class="container">
       <router-view />
     </main>
   </div>
@@ -15,6 +19,7 @@
 
 <script>
 export default {
+  data() { return { user: JSON.parse(localStorage.getItem('user') || 'null') } },
   methods: {
     logout() {
       localStorage.removeItem('api_token')

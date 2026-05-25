@@ -1,59 +1,128 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Fintech Gastos Challenge
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplicação full stack para controle de gastos pessoais, com backend em Laravel 12, autenticação via Sanctum, API para categorias e despesas, e frontend em Vue 3 com Vite.
 
-## About Laravel
+## Descrição breve do projeto
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+O sistema permite:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- cadastrar e autenticar usuários;
+- criar, editar e excluir categorias;
+- criar, editar e excluir despesas;
+- visualizar um dashboard com o total gasto no mês atual, as 5 últimas despesas e o resumo por categoria.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Pré-requisitos
 
-## Learning Laravel
+Teste realizado com o seguinte ambiente:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- PHP 8.2 ou superior
+- Node.js 20 ou superior
+- NPM 10 ou superior
+- PostgreSQL 15 ou superior
+- Composer 2.x
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Observação: o projeto também usa Laravel 12 e Vue 3.
 
-## Laravel Sponsors
+## Instalação das dependências
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Backend
 
-### Premium Partners
+```bash
+composer install
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Frontend
 
-## Contributing
+```bash
+cd frontend
+npm install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Como configurar o `.env`
 
-## Code of Conduct
+1. Copie o arquivo de exemplo:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+copy .env.example .env
+```
 
-## Security Vulnerabilities
+2. Gere a chave da aplicação:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+php artisan key:generate
+```
 
-## License
+3. Ajuste as variáveis de banco para PostgreSQL no arquivo `.env`:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```env
+APP_NAME="Fintech Gastos Challenge"
+APP_URL=http://localhost:8000
+
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=fintech_gastos
+DB_USERNAME=postgres
+DB_PASSWORD=sua_senha
+```
+
+4. Se precisar consumir a API do frontend em outro endereço, ajuste também a URL usada pelo Vite:
+
+```env
+VITE_API_URL=http://127.0.0.1:8000/api
+```
+
+## Como rodar migrations e seeders
+
+Execute as migrations:
+
+```bash
+php artisan migrate
+```
+
+Execute os seeders:
+
+```bash
+php artisan db:seed
+```
+
+Se quiser popular o ambiente de desenvolvimento com os dados padrão do projeto, rode também o seeder de desenvolvimento:
+
+```bash
+php artisan db:seed --class=DevSeeder
+```
+
+## Como iniciar o servidor
+
+### Backend
+
+```bash
+php artisan serve
+```
+
+### Frontend
+
+Em outro terminal:
+
+```bash
+cd frontend
+npm run dev
+```
+
+## Link do deploy público
+
+- Link do deploy público: ainda não publicado.
+
+## Credenciais do usuário seed para teste
+
+Use o usuário criado pelo seeder de desenvolvimento:
+
+- E-mail: `enzo@example.com`
+- Senha: `senha1234`
+
+## Observações úteis
+
+- A API usa autenticação por token com Sanctum.
+- O dashboard consome o endpoint autenticado `/api/auth/dashboard`.
+- As datas de despesas são exibidas no formato `DD/MM/AAAA`.
+- Para rodar tudo em sequência no projeto raiz, você também pode usar os scripts definidos no `composer.json`.

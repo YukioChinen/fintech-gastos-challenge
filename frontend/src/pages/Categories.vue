@@ -2,27 +2,37 @@
   <div>
     <h1>Categorias</h1>
 
-    <form @submit.prevent="createCategory" style="margin-bottom:12px">
-      <input v-model="name" placeholder="Nome da categoria" required />
-      <button type="submit">Criar</button>
-      <div v-if="error" style="color:red;margin-top:6px">{{ error }}</div>
-    </form>
+    <div class="card" style="max-width:640px;margin-bottom:12px">
+      <form @submit.prevent="createCategory">
+        <input v-model="name" placeholder="Nome da categoria" required />
+        <div style="display:flex;gap:8px">
+          <button type="submit">Criar</button>
+        </div>
+        <div v-if="error" style="color:red;margin-top:6px">{{ error }}</div>
+      </form>
+    </div>
 
-    <ul>
-      <li v-for="cat in categories" :key="cat.id" style="margin-bottom:8px">
-        <template v-if="editId === cat.id">
-          <input v-model="editName" />
-          <button @click="updateCategory">Salvar</button>
-          <button @click="cancelEdit">Cancelar</button>
-          <div v-if="error" style="color:red;margin-top:6px">{{ error }}</div>
-        </template>
-        <template v-else>
-          {{ cat.name }}
-          <button @click="startEdit(cat)" style="margin-left:8px">Editar</button>
-          <button @click="deleteCategory(cat.id)" style="margin-left:8px">Excluir</button>
-        </template>
-      </li>
-    </ul>
+    <div class="card" style="max-width:640px">
+      <ul>
+        <li v-for="cat in categories" :key="cat.id" style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+          <div style="flex:1">
+            <template v-if="editId === cat.id">
+              <input v-model="editName" />
+              <div v-if="error" style="color:red;margin-top:6px">{{ error }}</div>
+            </template>
+            <template v-else>
+              {{ cat.name }}
+            </template>
+          </div>
+          <div style="margin-left:8px">
+            <button v-if="editId !== cat.id" @click="startEdit(cat)" class="secondary">Editar</button>
+            <button v-if="editId === cat.id" @click="updateCategory">Salvar</button>
+            <button @click="deleteCategory(cat.id)" class="secondary">Excluir</button>
+            <button v-if="editId === cat.id" @click="cancelEdit" class="secondary">Cancelar</button>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 

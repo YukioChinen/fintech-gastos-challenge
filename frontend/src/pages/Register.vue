@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="card" style="max-width:520px">
     <h1>Registrar</h1>
     <form @submit.prevent="submit">
-      <div><input v-model="name" placeholder="Nome" required /></div>
-      <div><input v-model="email" placeholder="Email" required /></div>
-      <div><input v-model="password" type="password" placeholder="Senha" required /></div>
-      <div><input v-model="password_confirmation" type="password" placeholder="Confirmar senha" required /></div>
+      <input v-model="name" placeholder="Nome" required />
+      <input v-model="email" placeholder="Email" required />
+      <input v-model="password" type="password" placeholder="Senha" required />
+      <input v-model="password_confirmation" type="password" placeholder="Confirmar senha" required />
       <div style="margin-top:8px">
         <button type="submit">Registrar</button>
       </div>
@@ -14,7 +14,7 @@
       </div>
     </form>
 
-    <p>Já tem conta? <router-link to="/login">Entrar</router-link></p>
+    <p class="muted small">Já tem conta? <router-link to="/login">Entrar</router-link></p>
   </div>
 </template>
 

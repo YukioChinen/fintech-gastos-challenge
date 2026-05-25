@@ -1,15 +1,17 @@
 <template>
-  <div>
+  <div class="card" style="max-width:420px">
     <h1>Login</h1>
     <form @submit.prevent="submit">
-      <div><input v-model="email" placeholder="Email" /></div>
-      <div><input v-model="password" type="password" placeholder="Senha" /></div>
-      <button type="submit">Entrar</button>
+      <input v-model="email" placeholder="Email" />
+      <input v-model="password" type="password" placeholder="Senha" />
+      <div style="display:flex;gap:8px">
+        <button type="submit">Entrar</button>
+        <router-link to="/register" class="btn" style="background:#ddd;color:#0f172a;padding:8px 10px;border-radius:6px;text-decoration:none">Registrar</router-link>
+      </div>
       <div v-if="error" style="color:red;margin-top:8px">{{ error }}</div>
     </form>
 
-    <p>Não tem conta? <router-link to="/register">Registrar</router-link></p>
-    <p><router-link to="/forgot-password">Esqueci minha senha</router-link></p>
+    <p class="muted small" style="margin-top:8px"><router-link to="/forgot-password">Esqueci minha senha</router-link></p>
   </div>
 </template>
 
