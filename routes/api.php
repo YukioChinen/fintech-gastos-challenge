@@ -12,3 +12,8 @@ Route::prefix('auth')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
     });
 });
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('categories', App\Http\Controllers\Api\CategoryController::class);
+    Route::apiResource('expenses', App\Http\Controllers\Api\ExpenseController::class);
+});
