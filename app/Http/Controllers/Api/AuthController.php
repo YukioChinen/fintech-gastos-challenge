@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -61,6 +64,57 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Logout realizado com sucesso.',
+        ]);
+    }
+
+    public function forgotPassword(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        $user = User::where('email', $validated['email'])->first();
+
+        $response = [
+            'message' => 'Se o email existir, as instrucoes de redefinicao foram enviadas.',
+        ];
+
+        // For local development, return the token directly to simplify testing the flow.
+        if ($user && app()->environment(['local', 'testing'])) {
+            $response['reset_token'] = Password::broker()->createToken($user);
+        }
+
+        return response()->json($response);
+    }
+
+    public function resetPassword(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'token' => ['required', 'string'],
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        $status = Password::reset(
+            $validated,
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password),
+                    'remember_token' => Str::random(60),
+                ])->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        if ($status !== Password::PASSWORD_RESET) {
+            return response()->json([
+                'message' => 'Token invalido ou expirado.',
+            ], 422);
+        }
+
+        return response()->json([
+            'message' => 'Senha redefinida com sucesso.',
         ]);
     }
 }
