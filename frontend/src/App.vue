@@ -4,6 +4,7 @@
       <a href="/">Dashboard</a> |
       <router-link to="/categories">Categorias</router-link> |
       <router-link to="/expenses">Despesas</router-link> |
+      <router-link to="/change-password">Trocar senha</router-link> |
       <a href="#" @click.prevent="logout">Sair</a>
     </nav>
     <main style="padding:16px">

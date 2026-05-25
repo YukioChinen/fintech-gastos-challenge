@@ -117,4 +117,27 @@ class AuthController extends Controller
             'message' => 'Senha redefinida com sucesso.',
         ]);
     }
+
+    public function changePassword(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'string', 'min:8', 'confirmed', 'different:current_password'],
+        ], [
+            'current_password.required' => 'A senha atual e obrigatoria.',
+            'current_password.current_password' => 'A senha atual informada esta incorreta.',
+            'password.required' => 'A nova senha e obrigatoria.',
+            'password.min' => 'A nova senha deve ter no minimo 8 caracteres.',
+            'password.confirmed' => 'A confirmacao da senha nao confere.',
+            'password.different' => 'A nova senha deve ser diferente da senha atual.',
+        ]);
+
+        $user = $request->user();
+        $user->password = Hash::make($validated['password']);
+        $user->save();
+
+        return response()->json([
+            'message' => 'Senha alterada com sucesso.',
+        ]);
+    }
 }

@@ -3,6 +3,7 @@ import Login from '../pages/Login.vue'
 import Register from '../pages/Register.vue'
 import ForgotPassword from '../pages/ForgotPassword.vue'
 import ResetPassword from '../pages/ResetPassword.vue'
+import ChangePassword from '../pages/ChangePassword.vue'
 import Dashboard from '../pages/Dashboard.vue'
 import Categories from '../pages/Categories.vue'
 import Expenses from '../pages/Expenses.vue'
@@ -13,6 +14,7 @@ const routes = [
   { path: '/register', component: Register },
   { path: '/forgot-password', component: ForgotPassword },
   { path: '/reset-password', component: ResetPassword },
+  { path: '/change-password', component: ChangePassword, meta: { requiresAuth: true } },
   { path: '/categories', component: Categories, meta: { requiresAuth: true } },
   { path: '/expenses', component: Expenses, meta: { requiresAuth: true } },
 ]
