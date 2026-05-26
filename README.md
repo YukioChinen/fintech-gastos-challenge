@@ -111,7 +111,22 @@ npm run dev
 
 ## Link do deploy público
 
-- Link do deploy público: ainda não publicado.
+- O deploy público está preparado para Render com um único serviço web Laravel servindo o frontend Vue no mesmo domínio.
+- Blueprint do deploy: [`render.yaml`](render.yaml)
+
+### Como publicar no Render
+
+1. Crie um novo serviço Web a partir deste repositório usando o blueprint do `render.yaml`.
+2. O Render vai criar também um banco PostgreSQL para a aplicação.
+3. No build, o backend instala as dependências PHP, o frontend roda `npm ci && npm run build`, e os assets gerados são copiados para `public/assets`.
+4. O Laravel serve o SPA do Vue em rotas como `/`, `/login`, `/categories` e `/expenses`, enquanto a API continua disponível em `/api`.
+5. Depois do deploy, abra a URL pública do Render e ajuste `APP_URL` se você quiser usar um domínio personalizado.
+
+### O que foi pensado para o deploy
+
+- Frontend e backend funcionam no mesmo domínio para evitar problemas de CORS.
+- O frontend usa a API relativa `/api` por padrão, então o mesmo build funciona localmente e em produção.
+- O roteamento do Vue usa `createWebHistory`, então o Laravel retorna o `index.html` do SPA nas rotas não-`/api`.
 
 ## Credenciais do usuário seed para teste
 
