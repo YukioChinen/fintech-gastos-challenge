@@ -66,11 +66,13 @@ DB_USERNAME=postgres
 DB_PASSWORD=sua_senha
 ```
 
-4. Se precisar consumir a API do frontend em outro endereço, ajuste também a URL usada pelo Vite:
+4. Crie um arquivo `.env` dentro da pasta `frontend/` e defina a URL da API usada pelo Vite:
 
 ```env
 VITE_API_URL=http://127.0.0.1:8000/api
 ```
+
+O frontend lê essa variável diretamente via `import.meta.env.VITE_API_URL`, então ela precisa ficar na pasta `frontend/` e usar o prefixo `VITE_`.
 
 ## Como rodar migrations e seeders
 

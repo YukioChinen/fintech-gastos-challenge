@@ -27,6 +27,8 @@ Route::get('/', function () use ($resolveSpaIndex) {
     return view('welcome');
 });
 
+Route::redirect('/login', '/')->name('login');
+
 Route::get('/{any}', function () use ($resolveSpaIndex) {
     $spaIndex = $resolveSpaIndex();
 
