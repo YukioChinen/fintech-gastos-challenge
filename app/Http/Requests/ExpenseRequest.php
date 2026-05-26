@@ -19,7 +19,8 @@ class ExpenseRequest extends FormRequest
 
         return [
             'description' => ['required', 'string', 'max:255'],
-            'amount' => ['required', 'numeric', 'min:0.01'],
+            // decimal(12,2) in DB: max integer part 10 digits -> max value 9999999999.99
+            'amount' => ['required', 'numeric', 'min:0.01', 'max:9999999999.99'],
             'date' => ['required', 'date', "before_or_equal:{$tomorrow}"],
             'category_id' => ['required', 'integer', 'exists:categories,id'],
         ];
@@ -35,6 +36,7 @@ class ExpenseRequest extends FormRequest
             'amount.required' => 'O valor é obrigatório.',
             'amount.numeric' => 'O valor precisa ser numérico.',
             'amount.min' => 'O valor deve ser maior ou igual a 0,01.',
+            'amount.max' => 'O valor informado excede o limite permitido (máx R$ 9.999.999.999,99).',
 
             'date.required' => 'A data é obrigatória.',
             'date.date' => 'A data informada é inválida.',

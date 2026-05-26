@@ -28,4 +28,14 @@ class CategoryRequest extends FormRequest
             'name' => ['required', 'string', 'max:255', $uniqueRule],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'O campo Nome é obrigatório.',
+            'name.string' => 'O campo Nome deve ser um texto.',
+            'name.max' => 'O campo Nome não deve ser maior que 255 caracteres.',
+            'name.unique' => 'Você já possui uma categoria com esse nome.',
+        ];
+    }
 }

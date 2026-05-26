@@ -118,7 +118,13 @@ export default {
         this.amount = null
         this.loadExpenses()
       } catch (e) {
-        this.errors = e.response?.data?.errors || { general: e.response?.data?.message }
+        const status = e.response?.status
+        const serverMessage = e.response?.data?.message
+        if (status === 500) {
+          this.errors = { general: serverMessage || 'Erro no servidor. O valor informado pode ser maior que o permitido.' }
+        } else {
+          this.errors = e.response?.data?.errors || { general: serverMessage || 'Erro ao salvar despesa.' }
+        }
       }
     },
     startEdit(exp) {
@@ -142,7 +148,13 @@ export default {
         this.amount = null
         this.loadExpenses()
       } catch (e) {
-        this.errors = e.response?.data?.errors || { general: e.response?.data?.message }
+          const status = e.response?.status
+          const serverMessage = e.response?.data?.message
+          if (status === 500) {
+            this.errors = { general: serverMessage || 'Erro no servidor. O valor informado pode ser maior que o permitido.' }
+          } else {
+            this.errors = e.response?.data?.errors || { general: serverMessage || 'Erro ao atualizar despesa.' }
+          }
       }
     },
     async deleteExpense(id) {
