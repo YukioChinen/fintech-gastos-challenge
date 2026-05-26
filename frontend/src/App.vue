@@ -7,8 +7,9 @@
         <router-link to="/expenses">Despesas</router-link>
       </div>
       <div style="display:flex;align-items:center;gap:12px">
-        <span class="muted small">Olá, {{ user?.name }}</span>
-        <a href="#" class="btn" @click.prevent="logout">Sair</a>
+        <span v-if="user" class="muted small">Olá, {{ user.name }}</span>
+        <!-- hide logout button on the login page -->
+        <a v-if="user && $route.path !== '/login'" href="#" class="btn" @click.prevent="logout">Sair</a>
       </div>
     </header>
     <main class="container">
@@ -20,10 +21,21 @@
 <script>
 export default {
   data() { return { user: JSON.parse(localStorage.getItem('user') || 'null') } },
+  created() {
+    this._authHandler = () => {
+      this.user = JSON.parse(localStorage.getItem('user') || 'null')
+    }
+    window.addEventListener('auth:changed', this._authHandler)
+  },
+  beforeUnmount() {
+    window.removeEventListener('auth:changed', this._authHandler)
+  },
   methods: {
     logout() {
       localStorage.removeItem('api_token')
       localStorage.removeItem('user')
+      this.user = null
+      window.dispatchEvent(new CustomEvent('auth:changed'))
       this.$router.push('/login')
     }
   }

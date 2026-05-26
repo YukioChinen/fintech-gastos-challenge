@@ -12,7 +12,7 @@
       </form>
     </div>
 
-    <div class="card" style="max-width:640px">
+    <div v-if="categories.length" class="card" style="max-width:640px">
       <ul>
         <li v-for="cat in categories" :key="cat.id" style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
           <div style="flex:1">
@@ -24,7 +24,7 @@
               {{ cat.name }}
             </template>
           </div>
-          <div style="margin-left:8px">
+          <div style="margin-left:8px; display:flex; gap:16px; align-items:center">
             <button v-if="editId !== cat.id" @click="startEdit(cat)" class="secondary">Editar</button>
             <button v-if="editId === cat.id" @click="updateCategory">Salvar</button>
             <button @click="deleteCategory(cat.id)" class="secondary">Excluir</button>
@@ -32,6 +32,9 @@
           </div>
         </li>
       </ul>
+    </div>
+    <div v-else class="card" style="max-width:640px">
+      <div class="muted">Nenhuma categoria cadastrada.</div>
     </div>
   </div>
 </template>

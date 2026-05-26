@@ -12,7 +12,7 @@
             <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.name }}</option>
           </select>
         </div>
-        <div style="margin-top:8px">
+        <div style="margin-top:8px;display:flex;gap:12px;align-items:center">
           <button type="submit">{{ editId ? 'Salvar' : 'Criar despesa' }}</button>
           <button type="button" v-if="editId" @click="() => { editId = null; description=''; amount=null }" class="secondary">Cancelar</button>
         </div>
@@ -22,22 +22,25 @@
       </form>
     </div>
 
-    <div class="card" style="max-width:720px">
+    <div v-if="expenses.length" class="card" style="max-width:720px">
       <ul>
         <li v-for="exp in expenses" :key="exp.id" style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
           <div>
             <div>{{ formatDate(exp.date) }} <span class="muted small">— {{ exp.category?.name }}</span></div>
             <div class="muted small">{{ exp.description }}</div>
           </div>
-          <div style="display:flex;gap:8px;align-items:center">
+          <div style="display:flex;gap:16px;align-items:center">
             <div>R$ {{ Number(exp.amount).toFixed(2) }}</div>
-            <div>
+            <div style="display:flex;gap:16px;align-items:center">
               <button @click="startEdit(exp)" class="secondary">Editar</button>
               <button @click="deleteExpense(exp.id)" class="secondary">Excluir</button>
             </div>
           </div>
         </li>
       </ul>
+    </div>
+    <div v-else class="card" style="max-width:720px">
+      <div class="muted">Nenhuma despesa registrada.</div>
     </div>
   </div>
 </template>

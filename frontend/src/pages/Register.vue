@@ -45,7 +45,9 @@ export default {
         const token = res.data.token
         localStorage.setItem('api_token', token)
         localStorage.setItem('user', JSON.stringify(res.data.user))
-        this.$router.push('/')
+          // notify app that auth changed so header updates
+          window.dispatchEvent(new CustomEvent('auth:changed'))
+          this.$router.push('/')
       } catch (e) {
         this.errors = e.response?.data?.errors || { general: e.response?.data?.message }
       }

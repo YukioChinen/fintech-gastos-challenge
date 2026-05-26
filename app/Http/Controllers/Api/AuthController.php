@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use App\Notifications\CustomResetPassword;
+use Illuminate\Support\Facades\Notification;
 
 class AuthController extends Controller
 {
@@ -75,16 +77,27 @@ class AuthController extends Controller
 
         $user = User::where('email', $validated['email'])->first();
 
-        $response = [
-            'message' => 'Se o email existir, as instrucoes de redefinicao foram enviadas.',
-        ];
+        $message = 'Se o email existir, as instrucoes de redefinicao foram enviadas.';
 
-        // For local development, return the token directly to simplify testing the flow.
-        if ($user && app()->environment(['local', 'testing'])) {
-            $response['reset_token'] = Password::broker()->createToken($user);
+        // If the user exists, send the reset link by e-mail and also return the token
+        // in the JSON response (useful for testing/challenge purposes).
+        if ($user) {
+            // create a token and send a custom reset notification (PT-BR)
+            $token = Password::broker()->createToken($user);
+
+            // notify the user by email with the token and a reset link
+            $user->notify(new CustomResetPassword($token));
+
+            return response()->json([
+                'message' => $message,
+                'reset_token' => $token,
+            ]);
         }
 
-        return response()->json($response);
+        // Generic response when user not found (no info leak)
+        return response()->json([
+            'message' => $message,
+        ]);
     }
 
     public function resetPassword(Request $request): JsonResponse

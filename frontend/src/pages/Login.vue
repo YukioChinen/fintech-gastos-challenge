@@ -26,6 +26,8 @@ export default {
         const res = await api.post('/auth/login', { email: this.email, password: this.password })
         localStorage.setItem('api_token', res.data.token)
         localStorage.setItem('user', JSON.stringify(res.data.user))
+        // notify app that auth changed so header updates
+        window.dispatchEvent(new CustomEvent('auth:changed'))
         this.$router.push('/')
       } catch (e) {
         const status = e.response?.status

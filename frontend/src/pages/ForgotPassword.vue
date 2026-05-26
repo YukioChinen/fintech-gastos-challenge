@@ -4,14 +4,14 @@
 
     <form @submit.prevent="submit">
       <div><input v-model="email" type="email" placeholder="Email" required /></div>
-      <button type="submit">Enviar instrucoes</button>
+      <button type="submit" style="margin-top:16px">Enviar instruções</button>
     </form>
 
     <p v-if="message" style="color: green; margin-top: 8px">{{ message }}</p>
     <p v-if="error" style="color: red; margin-top: 8px">{{ error }}</p>
 
     <div v-if="resetToken" style="margin-top: 12px">
-      <p>Token de redefinicao (ambiente local):</p>
+      <p>Token de redefinição (ambiente local):</p>
       <pre style="background:#f5f5f5;padding:8px">{{ resetToken }}</pre>
       <router-link :to="`/reset-password?email=${encodeURIComponent(email)}&token=${encodeURIComponent(resetToken)}`">
         Ir para redefinir senha
@@ -42,10 +42,10 @@ export default {
 
       try {
         const res = await api.post('/auth/forgot-password', { email: this.email })
-        this.message = res.data.message || 'Verifique seu email para redefinir a senha.'
+          this.message = res.data.message || 'Verifique seu e-mail para redefinir a senha.'
         this.resetToken = res.data.reset_token || ''
       } catch (e) {
-        this.error = e.response?.data?.message || 'Nao foi possivel enviar as instrucoes.'
+          this.error = e.response?.data?.message || 'Não foi possível enviar as instruções.'
       }
     },
   },

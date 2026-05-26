@@ -126,3 +126,109 @@ Use o usuário criado pelo seeder de desenvolvimento:
 - O dashboard consome o endpoint autenticado `/api/auth/dashboard`.
 - As datas de despesas são exibidas no formato `DD/MM/AAAA`.
 - Para rodar tudo em sequência no projeto raiz, você também pode usar os scripts definidos no `composer.json`.
+
+## Executando os testes
+
+Os testes usam PHPUnit via o wrapper do Laravel (`php artisan test`) e o arquivo `phpunit.xml` está configurado para usar um banco SQLite em memória, portanto não é necessário configurar um banco externo para executar a suíte básica.
+
+Comandos úteis:
+
+```bash
+# instalar dependências PHP (se ainda não):
+composer install
+
+# rodar toda a suíte via Artisan (recomendado):
+php artisan test
+
+# rodar via phpunit diretamente:
+vendor/bin/phpunit
+
+# rodar apenas um teste de feature:
+php artisan test --filter AuthTest
+
+# rodar um único método de teste:
+php artisan test --filter test_register_and_login_and_me
+```
+
+Notas e solução de problemas:
+- O `phpunit.xml` define `DB_CONNECTION=sqlite` e `DB_DATABASE=:memory:` — habilite a extensão `pdo_sqlite` do PHP se aparecer erro relacionado ao driver.
+- Se preferir usar um banco real para testes, exporte as variáveis `DB_*` apropriadas antes de rodar os testes.
+- Para ver saída mais detalhada: `php artisan test --verbose`.
+
+## Configuração de e-mail (SMTP)
+
+Por padrão o projeto está configurado para `MAIL_MAILER=log` no arquivo `.env`, ou seja, os e-mails não são enviados externamente — eles são gravados nos logs em `storage/logs/laravel.log`. Isso facilita o desenvolvimento quando você não tem um servidor SMTP configurado.
+
+Se você deseja que os e-mails sejam realmente enviados (por exemplo para receber o e-mail de redefinição de senha), ajuste as variáveis abaixo no seu `.env` para usar um provedor SMTP.
+
+Exemplo — Mailtrap (desenvolvimento):
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=SEU_USER_MAILTRAP
+MAIL_PASSWORD=SEU_PASS_MAILTRAP
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS=hello@example.com
+MAIL_FROM_NAME="Fintech Gastos"
+```
+
+Exemplo — Gmail (use App Password se tiver 2FA):
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=seu.email@gmail.com
+MAIL_PASSWORD=SUA_APP_PASSWORD
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=seu.email@gmail.com
+MAIL_FROM_NAME="Fintech Gastos"
+```
+
+Exemplo — SendGrid (SMTP):
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.sendgrid.net
+MAIL_PORT=587
+MAIL_USERNAME=apikey
+MAIL_PASSWORD=SEU_SENDGRID_API_KEY
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=no-reply@seudominio.com
+MAIL_FROM_NAME="Fintech Gastos"
+```
+
+Após alterar o `.env`, limpe o cache de configuração:
+
+```bash
+php artisan config:clear
+php artisan cache:clear
+```
+
+Como testar o envio
+
+- Ver logs (modo padrão `log`):
+
+```bash
+# Windows (PowerShell)
+Get-Content .\storage\logs\laravel.log -Tail 120
+
+# macOS / Linux
+tail -n 120 storage/logs/laravel.log
+```
+
+- Enviar um e-mail de teste via Tinker (notificação custom já instalada):
+
+```bash
+php artisan tinker
+>>> $user = App\Models\User::where('email','enzo@example.com')->first();
+>>> $token = Illuminate\Support\Facades\Password::broker()->createToken($user);
+>>> $user->notify(new App\Notifications\CustomResetPassword($token));
+```
+
+Observações
+
+- O endpoint de `forgot-password` também retorna `reset_token` no JSON quando o e-mail existe — isso é deliberado para facilitar testes no contexto deste desafio. Mesmo assim o app enviará o e-mail com o link/token quando `MAIL_MAILER` estiver configurado para `smtp`.
+- Se não receber e-mails com SMTP configurado, verifique `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD` e `MAIL_ENCRYPTION`, além de portas bloqueadas pelo firewall.
