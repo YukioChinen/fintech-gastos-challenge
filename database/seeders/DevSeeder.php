@@ -16,8 +16,8 @@ class DevSeeder extends Seeder
     {
         // Create or update a dev user with known credentials
         $user = User::updateOrCreate(
-            ['email' => 'enzo@example.com'],
-            ['name' => 'Enzo Dev', 'password' => bcrypt('senha1234')]
+            ['email' => 'teste@teste.com'],
+            ['name' => 'Teste Teste', 'password' => bcrypt('senha1234')]
         );
 
         // Remove existing categories and expenses for idempotent seeding
