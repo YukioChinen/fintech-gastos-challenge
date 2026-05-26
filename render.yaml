@@ -2,7 +2,7 @@ services:
   - type: web
     name: fintech-gastos-challenge
     runtime: docker
-    plan: starter
+    plan: free
     rootDir: .
     dockerfilePath: ./Dockerfile
     envVars:
@@ -27,5 +27,6 @@ services:
 
 databases:
   - name: fintech-gastos-db
+    plan: basic-256mb
     databaseName: fintech_gastos
     user: fintech_gastos
