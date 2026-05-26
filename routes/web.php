@@ -2,20 +2,35 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    $spaIndex = base_path('frontend/dist/index.html');
+$resolveSpaIndex = static function (): ?string {
+    $candidates = [
+        public_path('build/index.html'),
+        base_path('frontend/dist/index.html'),
+    ];
 
-    if (file_exists($spaIndex)) {
+    foreach ($candidates as $path) {
+        if (file_exists($path)) {
+            return $path;
+        }
+    }
+
+    return null;
+};
+
+Route::get('/', function () use ($resolveSpaIndex) {
+    $spaIndex = $resolveSpaIndex();
+
+    if ($spaIndex) {
         return response()->file($spaIndex);
     }
 
     return view('welcome');
 });
 
-Route::get('/{any}', function () {
-    $spaIndex = base_path('frontend/dist/index.html');
+Route::get('/{any}', function () use ($resolveSpaIndex) {
+    $spaIndex = $resolveSpaIndex();
 
-    if (file_exists($spaIndex)) {
+    if ($spaIndex) {
         return response()->file($spaIndex);
     }
 
