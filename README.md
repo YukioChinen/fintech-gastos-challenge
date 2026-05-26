@@ -237,6 +237,24 @@ Get-Content .\storage\logs\laravel.log -Tail 120
 tail -n 120 storage/logs/laravel.log
 ```
 
+Integração Contínua (GitHub Actions)
+----------------------------------
+
+Este repositório inclui um workflow de CI baseado em GitHub Actions localizado em `.github/workflows/php-tests.yml`.
+
+O que o workflow faz:
+
+- Roda os testes PHP (`php artisan test`) em cada push e pull request nas branches `main`/`master`.
+- Configura PHP (8.2) e as extensões necessárias (`pdo_sqlite`) para executar a suíte usando um banco SQLite em memória.
+
+Como funciona localmente vs CI:
+
+- Local: você pode executar `php artisan test` para reproduzir o que o CI roda.
+- CI: o Actions fará checkout do código, instalará dependências via Composer, ajustará um `.env` temporário para usar SQLite em memória e executará os testes.
+
+Se quiser expandir o workflow para também buildar o frontend (Vite) ou publicar artefatos, veja o arquivo do workflow e adicione passos para `cd frontend && npm ci` e `cd frontend && npm run build`.
+
+
 - Enviar um e-mail de teste via Tinker (notificação custom já instalada):
 
 ```bash

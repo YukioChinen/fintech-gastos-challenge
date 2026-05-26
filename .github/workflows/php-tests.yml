@@ -1,0 +1,37 @@
+name: PHP Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v4
+        with:
+          php-version: '8.2'
+          extensions: mbstring, bcmath, sqlite, pdo_sqlite
+
+      - name: Setup Node (for frontend build if needed)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress --no-suggest --prefer-dist
+
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php -r "file_put_contents('.env', preg_replace('/DB_CONNECTION=.*/', 'DB_CONNECTION=sqlite', file_get_contents('.env')));"
+          php -r "file_put_contents('.env', preg_replace('/DB_DATABASE=.*/', 'DB_DATABASE=:memory:', file_get_contents('.env')));"
+          php artisan key:generate --ansi
+
+      - name: Run tests
+        run: php artisan test --no-interaction --verbose
