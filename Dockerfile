@@ -34,7 +34,8 @@ COPY . /var/www/html
 COPY --from=node-build /app/frontend/dist /var/www/html/frontend/dist
 
 RUN chown -R www-data:www-data /var/www/html \
-    && a2enmod rewrite
+    && a2enmod rewrite \
+    && sed -ri 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/*.conf /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 # Install PHP dependencies
 RUN composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction || true
