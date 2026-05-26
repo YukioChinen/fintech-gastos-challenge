@@ -5,11 +5,14 @@ FROM node:20 AS node-build
 
 WORKDIR /app/frontend
 
+# Ensure devDependencies (e.g. vite) are available during image build.
+ENV NODE_ENV=development
+
 # Copia package files
 COPY frontend/package*.json ./
 
 # Instala dependências
-RUN npm ci
+RUN npm ci --include=dev
 
 # Copia restante do frontend
 COPY frontend/ ./
@@ -69,7 +72,9 @@ RUN mkdir -p \
     storage/framework/sessions \
     storage/framework/views \
     storage/logs \
-    bootstrap/cache
+    bootstrap/cache \
+    database \
+    && touch database/database.sqlite
 
 # Permissões
 RUN chown -R www-data:www-data /var/www/html \
