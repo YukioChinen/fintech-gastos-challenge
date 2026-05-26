@@ -113,20 +113,8 @@ npm run dev
 
 - O deploy público está preparado para Render com um único serviço web Laravel servindo o frontend Vue no mesmo domínio.
 - Blueprint do deploy: [`render.yaml`](render.yaml)
+ - URL pública: https://fintech-gastos-challenge-wf6w.onrender.com/
 
-### Como publicar no Render
-
-1. Crie um novo serviço Web a partir deste repositório usando o blueprint do `render.yaml`.
-2. O Render vai criar também um banco PostgreSQL para a aplicação.
-3. No build, o backend instala as dependências PHP, o frontend roda `npm ci && npm run build`, e os assets gerados são copiados para `public/assets`.
-4. O Laravel serve o SPA do Vue em rotas como `/`, `/login`, `/categories` e `/expenses`, enquanto a API continua disponível em `/api`.
-5. Depois do deploy, abra a URL pública do Render e ajuste `APP_URL` se você quiser usar um domínio personalizado.
-
-### O que foi pensado para o deploy
-
-- Frontend e backend funcionam no mesmo domínio para evitar problemas de CORS.
-- O frontend usa a API relativa `/api` por padrão, então o mesmo build funciona localmente e em produção.
-- O roteamento do Vue usa `createWebHistory`, então o Laravel retorna o `index.html` do SPA nas rotas não-`/api`.
 
 ## Credenciais do usuário seed para teste
 
@@ -282,4 +270,6 @@ php artisan tinker
 Observações
 
 - O endpoint de `forgot-password` também retorna `reset_token` no JSON quando o e-mail existe — isso é deliberado para facilitar testes no contexto deste desafio. Mesmo assim o app enviará o e-mail com o link/token quando `MAIL_MAILER` estiver configurado para `smtp`.
+  
+	Observação: para fins do desafio técnico, o frontend exibe o `reset_token` diretamente na tela na página "Esqueci minha senha" após o envio, e também oferece um link direto para a tela de redefinição usando esse token. Não deixe essa exposição ativa em produção.
 - Se não receber e-mails com SMTP configurado, verifique `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD` e `MAIL_ENCRYPTION`, além de portas bloqueadas pelo firewall.

@@ -13,6 +13,11 @@
     <p v-if="message" style="color: green; margin-top: 8px">{{ message }}</p>
     <p v-if="error" style="color: red; margin-top: 8px">{{ error }}</p>
 
+    <div v-if="token" style="margin-top:12px">
+      <p>Token de redefinição (visível para testes):</p>
+      <pre style="background:#f5f5f5;padding:8px;word-break:break-all">{{ token }}</pre>
+    </div>
+
     <p style="margin-top: 12px"><router-link to="/login">Voltar ao login</router-link></p>
   </div>
 </template>

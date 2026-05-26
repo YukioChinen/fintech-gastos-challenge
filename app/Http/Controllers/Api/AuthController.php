@@ -77,7 +77,7 @@ class AuthController extends Controller
 
         $user = User::where('email', $validated['email'])->first();
 
-        $message = 'Se o email existir, as instrucoes de redefinicao foram enviadas.';
+        $message = 'Se o email existir, as instruções de redefinição foram enviadas.';
 
         // If the user exists, send the reset link by e-mail and also return the token
         // in the JSON response (useful for testing/challenge purposes).
