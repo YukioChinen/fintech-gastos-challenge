@@ -27,6 +27,6 @@ services:
 
 databases:
   - name: fintech-gastos-db
-    plan: basic-256mb
+    plan: free
     databaseName: fintech_gastos
     user: fintech_gastos
