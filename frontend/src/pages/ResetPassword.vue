@@ -2,7 +2,7 @@
   <div>
     <h1>Redefinir senha</h1>
 
-    <form @submit.prevent="submit">
+    <form class="reset-form" @submit.prevent="submit">
       <div><input v-model="email" type="email" placeholder="Email" required /></div>
       <div><input v-model="token" placeholder="Token" required /></div>
       <div><input v-model="password" type="password" placeholder="Nova senha" required /></div>
@@ -56,3 +56,20 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+/* Espaçamento entre campos do formulário de redefinição */
+.reset-form > div {
+  margin-bottom: 12px;
+}
+
+.reset-form button {
+  margin-top: 8px;
+  padding: 8px 12px;
+}
+
+.reset-form input {
+  width: 100%;
+  box-sizing: border-box;
+}
+</style>
