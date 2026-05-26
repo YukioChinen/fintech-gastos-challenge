@@ -36,7 +36,7 @@ export default {
         } else if (status === 422) {
           this.error = 'Preencha email e senha corretamente.'
         } else {
-          this.error = 'Nao foi possivel entrar agora. Tente novamente.'
+          this.error = 'Não foi possível entrar agora. Tente novamente.'
         }
       }
     }
