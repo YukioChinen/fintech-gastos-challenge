@@ -30,7 +30,6 @@ services:
         value: file
       - key: MAIL_MAILER
         value: log
-    preDeployCommand: php artisan migrate --force
 
 databases:
   - name: fintech-gastos-db
