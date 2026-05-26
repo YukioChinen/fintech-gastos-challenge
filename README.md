@@ -120,7 +120,7 @@ npm run dev
 
 Use o usuário criado pelo seeder de desenvolvimento:
 
-- E-mail: `enzo@example.com`
+- E-mail: `teste@teste.com`
 - Senha: `senha1234`
 
 ## Observações úteis
