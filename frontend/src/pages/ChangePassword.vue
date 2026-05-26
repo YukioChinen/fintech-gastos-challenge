@@ -2,7 +2,7 @@
   <div>
     <h1>Trocar senha</h1>
 
-    <form @submit.prevent="submit">
+    <form @submit.prevent="submit" style="display:flex;flex-direction:column;gap:12px;max-width:420px">
       <div>
         <input v-model="current_password" type="password" placeholder="Senha atual" required />
       </div>
@@ -12,13 +12,17 @@
       <div>
         <input v-model="password_confirmation" type="password" placeholder="Confirmar nova senha" required />
       </div>
-      <button type="submit">Salvar nova senha</button>
+      <button type="submit" style="align-self:flex-start">Salvar nova senha</button>
     </form>
 
     <p v-if="message" style="color: green; margin-top: 8px">{{ message }}</p>
     <div v-if="errors && Object.keys(errors).length" style="color: red; margin-top: 8px">
-      <div v-for="(msgs, key) in errors" :key="key">
-        {{ key }}: {{ Array.isArray(msgs) ? msgs.join(', ') : msgs }}
+      <div v-for="(msgs, key) in errors" :key="key" style="margin-bottom:6px">
+        <div>{{ fieldLabel(key) }}:</div>
+        <div v-if="Array.isArray(msgs)">
+          <div v-for="(msg, index) in msgs" :key="index" style="margin-left:12px">- {{ msg }}</div>
+        </div>
+        <div v-else style="margin-left:12px">- {{ msgs }}</div>
       </div>
     </div>
   </div>
@@ -38,6 +42,17 @@ export default {
     }
   },
   methods: {
+    fieldLabel(key) {
+      const labels = {
+        current_password: 'Senha atual',
+        password: 'Nova senha',
+        password_confirmation: 'Confirmar nova senha',
+        geral: 'Geral',
+      }
+
+      return labels[key] || key
+    },
+
     async submit() {
       this.message = ''
       this.errors = {}

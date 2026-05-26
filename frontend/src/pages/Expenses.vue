@@ -17,7 +17,13 @@
           <button type="button" v-if="editId" @click="() => { editId = null; description=''; amount=null }" class="secondary">Cancelar</button>
         </div>
         <div v-if="errors && Object.keys(errors).length" style="color:red;margin-top:6px">
-          <div v-for="(msgs, key) in errors" :key="key">{{ key }}: {{ Array.isArray(msgs) ? msgs.join(', ') : msgs }}</div>
+          <div v-for="(msgs, key) in errors" :key="key" style="margin-bottom:6px">
+            <div>{{ fieldLabel(key) }}:</div>
+            <div v-if="Array.isArray(msgs)">
+              <div v-for="(msg, index) in msgs" :key="index" style="margin-left:12px">- {{ msg }}</div>
+            </div>
+            <div v-else style="margin-left:12px">- {{ msgs }}</div>
+          </div>
         </div>
       </form>
     </div>
@@ -66,6 +72,18 @@ export default {
     this.loadExpenses()
   },
   methods: {
+    fieldLabel(key) {
+      const labels = {
+        description: 'Descrição',
+        amount: 'Valor',
+        date: 'Data',
+        category_id: 'Categoria',
+        general: 'Geral',
+      }
+
+      return labels[key] || key
+    },
+
     formatDate(value) {
       if (!value) return ''
       const datePart = String(value).slice(0, 10)

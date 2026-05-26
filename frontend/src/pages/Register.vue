@@ -10,7 +10,13 @@
         <button type="submit">Registrar</button>
       </div>
       <div v-if="errors && Object.keys(errors).length" style="color:red;margin-top:8px">
-        <div v-for="(msgs, key) in errors" :key="key">{{ key }}: {{ Array.isArray(msgs) ? msgs.join(', ') : msgs }}</div>
+        <div v-for="(msgs, key) in errors" :key="key" style="margin-bottom:6px">
+          <div>{{ fieldLabel(key) }}:</div>
+          <div v-if="Array.isArray(msgs)">
+            <div v-for="(msg, index) in msgs" :key="index" style="margin-left:12px">- {{ msg }}</div>
+          </div>
+          <div v-else style="margin-left:12px">- {{ msgs }}</div>
+        </div>
       </div>
     </form>
 
@@ -32,6 +38,18 @@ export default {
     }
   },
   methods: {
+    fieldLabel(key) {
+      const labels = {
+        name: 'Nome',
+        email: 'Email',
+        password: 'Senha',
+        password_confirmation: 'Confirmar senha',
+        general: 'Geral',
+      }
+
+      return labels[key] || key
+    },
+
     async submit() {
       this.errors = {}
       try {

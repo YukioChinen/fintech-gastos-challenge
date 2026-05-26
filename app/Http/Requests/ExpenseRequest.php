@@ -28,21 +28,21 @@ class ExpenseRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'description.required' => 'A descricao e obrigatoria.',
-            'description.string' => 'A descricao precisa ser um texto valido.',
-            'description.max' => 'A descricao pode ter no maximo 255 caracteres.',
+            'description.required' => 'A descrição é obrigatória.',
+            'description.string' => 'A descrição precisa ser um texto válido.',
+            'description.max' => 'A descrição pode ter no máximo 255 caracteres.',
 
-            'amount.required' => 'O valor e obrigatorio.',
-            'amount.numeric' => 'O valor precisa ser numerico.',
+            'amount.required' => 'O valor é obrigatório.',
+            'amount.numeric' => 'O valor precisa ser numérico.',
             'amount.min' => 'O valor deve ser maior ou igual a 0,01.',
 
-            'date.required' => 'A data e obrigatoria.',
-            'date.date' => 'A data informada e invalida.',
-            'date.before_or_equal' => 'A data nao pode ser maior que amanha.',
+            'date.required' => 'A data é obrigatória.',
+            'date.date' => 'A data informada é inválida.',
+            'date.before_or_equal' => 'A data não pode ser maior que amanhã.',
 
-            'category_id.required' => 'A categoria e obrigatoria.',
-            'category_id.integer' => 'A categoria informada e invalida.',
-            'category_id.exists' => 'A categoria selecionada nao existe.',
+            'category_id.required' => 'A categoria é obrigatória.',
+            'category_id.integer' => 'A categoria informada é inválida.',
+            'category_id.exists' => 'A categoria selecionada não existe.',
         ];
     }
 }

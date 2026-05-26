@@ -137,11 +137,11 @@ class AuthController extends Controller
             'current_password' => ['required', 'current_password'],
             'password' => ['required', 'string', 'min:8', 'confirmed', 'different:current_password'],
         ], [
-            'current_password.required' => 'A senha atual e obrigatoria.',
-            'current_password.current_password' => 'A senha atual informada esta incorreta.',
-            'password.required' => 'A nova senha e obrigatoria.',
-            'password.min' => 'A nova senha deve ter no minimo 8 caracteres.',
-            'password.confirmed' => 'A confirmacao da senha nao confere.',
+            'current_password.required' => 'A senha atual é obrigatória.',
+            'current_password.current_password' => 'A senha atual informada está incorreta.',
+            'password.required' => 'A nova senha é obrigatória.',
+            'password.min' => 'A nova senha deve ter no mínimo 8 caracteres.',
+            'password.confirmed' => 'A confirmação da senha não confere.',
             'password.different' => 'A nova senha deve ser diferente da senha atual.',
         ]);
 

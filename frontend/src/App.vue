@@ -5,8 +5,9 @@
         <router-link to="/">Dashboard</router-link>
         <router-link to="/categories">Categorias</router-link>
         <router-link to="/expenses">Despesas</router-link>
+        <router-link v-if="user" to="/change-password">Senha</router-link>
       </div>
-      <div style="display:flex;align-items:center;gap:12px">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
         <span v-if="user" class="muted small">Olá, {{ user.name }}</span>
         <!-- hide logout button on the login page -->
         <a v-if="user && $route.path !== '/login'" href="#" class="btn" @click.prevent="logout">Sair</a>
