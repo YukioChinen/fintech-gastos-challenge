@@ -155,6 +155,24 @@ Notas e solução de problemas:
 - Se preferir usar um banco real para testes, exporte as variáveis `DB_*` apropriadas antes de rodar os testes.
 - Para ver saída mais detalhada: `php artisan test --verbose`.
 
+Testes incluídos
+---------------
+
+O projeto contém testes de Feature que cobrem fluxos importantes. Atualmente os testes presentes são:
+
+- `Tests/Feature/AuthTest.php`: cobre registro, login e o endpoint `me` (autenticação via Sanctum).
+- `Tests/Feature/ExpenseValidationTest.php`: validações do `ExpenseRequest` (valores inválidos, datas, etc.).
+- `Tests/Feature/ExpenseRulesTest.php`: regras de negócio/autorizações, por exemplo impedir ações com categorias de outro usuário.
+- `Tests/Feature/DashboardTest.php`: valida o endpoint `/api/auth/dashboard` (total do mês, últimas despesas e resumo por categoria).
+
+Você pode executar um teste específico usando o filtro do Artisan, por exemplo:
+
+```bash
+php artisan test --filter DashboardTest
+```
+
+Observação: os testes usam a trait `RefreshDatabase` e o banco em memória (`sqlite`) por padrão.
+
 ## Configuração de e-mail (SMTP)
 
 Por padrão o projeto está configurado para `MAIL_MAILER=log` no arquivo `.env`, ou seja, os e-mails não são enviados externamente — eles são gravados nos logs em `storage/logs/laravel.log`. Isso facilita o desenvolvimento quando você não tem um servidor SMTP configurado.
