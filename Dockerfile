@@ -7,6 +7,8 @@ COPY frontend/package*.json ./
 COPY frontend/package-lock.json ./
 RUN npm ci --include=dev
 COPY frontend/ ./
+RUN apt-get update && apt-get install -y nodejs npm
+RUN npm install
 RUN npm run build
 
 # Build PHP app with Apache
