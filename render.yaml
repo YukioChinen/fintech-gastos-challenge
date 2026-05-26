@@ -17,9 +17,11 @@ services:
       - key: APP_URL
         value: https://fintech-gastos-challenge.onrender.com
       - key: DB_CONNECTION
-        value: sqlite
-      - key: DB_DATABASE
-        value: /var/www/html/database/database.sqlite
+        value: pgsql
+      - key: DB_URL
+        fromDatabase:
+          name: fintech-gastos-db
+          property: connectionString
       - key: CACHE_STORE
         value: file
       - key: QUEUE_CONNECTION
@@ -28,3 +30,10 @@ services:
         value: file
       - key: MAIL_MAILER
         value: log
+    preDeployCommand: php artisan migrate --force
+
+databases:
+  - name: fintech-gastos-db
+    plan: basic-256mb
+    databaseName: fintech_gastos
+    user: fintech_gastos
