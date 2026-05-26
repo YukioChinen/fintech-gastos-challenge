@@ -1,7 +1,7 @@
 # Build frontend
 FROM node:20 AS node-build
 WORKDIR /app/frontend
-# Ensure devDependencies are installed so `vite` is available for the build
+#Ensure devDependencies are installed so `vite` is available for the build
 ENV NODE_ENV=development
 COPY frontend/package*.json ./
 COPY frontend/package-lock.json ./
