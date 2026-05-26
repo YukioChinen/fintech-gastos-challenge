@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng-dev \
     libonig-dev \
     libpq-dev \
-    && docker-php-ext-install zip pdo pdo_pgsql mbstring gd bcmath \
+    && docker-php-ext-install zip pdo pdo_pgsql pdo_mysql mbstring gd bcmath \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy composer (from official image)
