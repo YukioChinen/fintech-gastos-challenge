@@ -18,6 +18,12 @@ services:
         value: https://fintech-gastos-challenge.onrender.com
       - key: DB_CONNECTION
         value: pgsql
+      - key: CACHE_STORE
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: SESSION_DRIVER
+        value: file
       - key: DB_URL
         fromDatabase:
           name: fintech-gastos-db
