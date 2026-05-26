@@ -1,19 +1,29 @@
-# Build frontend
+# =========================
+# Build frontend (Vite/React)
+# =========================
 FROM node:20 AS node-build
+
 WORKDIR /app/frontend
-#Ensure devDependencies are installed so `vite` is available for the build
-ENV NODE_ENV=development
+
+# Copia package files
 COPY frontend/package*.json ./
-COPY frontend/package-lock.json ./
-RUN npm ci --include=dev
+
+# Instala dependências
+RUN npm ci
+
+# Copia restante do frontend
 COPY frontend/ ./
-RUN apt-get update && apt-get install -y nodejs npm
-RUN npm install
+
+# Build do frontend
 RUN npm run build
 
-# Build PHP app with Apache
+
+# =========================
+# PHP + Apache (Laravel)
+# =========================
 FROM php:8.2-apache
 
+# Instala dependências do sistema e extensões PHP
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     unzip \
@@ -21,34 +31,52 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng-dev \
     libonig-dev \
     libpq-dev \
-    && docker-php-ext-install zip pdo pdo_pgsql pdo_mysql mbstring gd bcmath \
+    && docker-php-ext-install \
+    zip \
+    pdo \
+    pdo_pgsql \
+    pdo_mysql \
+    mbstring \
+    gd \
+    bcmath \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy composer (from official image)
+# Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# Diretório da aplicação
 WORKDIR /var/www/html
 
-# Copy application files
+# Copia arquivos do Laravel
 COPY . /var/www/html
 
-# Copy built frontend into the repo so Laravel can serve it
-COPY --from=node-build /app/frontend/dist /var/www/html/frontend/dist
+# Copia build do frontend para public/build
+COPY --from=node-build /app/frontend/dist /var/www/html/public/build
 
+# Instala dependências PHP
+RUN composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+
+# Configura Apache para usar /public
+RUN a2enmod rewrite \
+    && sed -ri 's!/var/www/html!/var/www/html/public!g' \
+    /etc/apache2/sites-available/*.conf \
+    /etc/apache2/apache2.conf \
+    /etc/apache2/conf-available/*.conf
+
+# Cria diretórios necessários do Laravel
+RUN mkdir -p \
+    storage/framework/cache/data \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/logs \
+    bootstrap/cache
+
+# Permissões
 RUN chown -R www-data:www-data /var/www/html \
-    && a2enmod rewrite \
-    && sed -ri 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/*.conf /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+    && chmod -R 775 storage bootstrap/cache
 
-# Create runtime directories Laravel needs when using file-based sessions/cache.
-RUN mkdir -p /var/www/html/storage/framework/cache/data \
-    /var/www/html/storage/framework/sessions \
-    /var/www/html/storage/framework/views \
-    /var/www/html/storage/logs \
-    /var/www/html/bootstrap/cache \
-    && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Install PHP dependencies
-RUN composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction || true
-
+# Porta
 EXPOSE 80
+
+# Inicializa Apache
 CMD ["apache2-foreground"]
